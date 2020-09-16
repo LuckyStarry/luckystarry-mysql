@@ -7,7 +7,7 @@
 [![Coverage Status](https://coveralls.io/repos/github/LuckyStarry/luckystarry-mysql/badge.svg?branch=master)](https://coveralls.io/github/LuckyStarry/luckystarry-mysql?branch=master)
 [![Npm Status](https://img.shields.io/npm/v/luckystarry-mysql.svg)](https://www.npmjs.com/package/luckystarry-mysql)
 [![install size](https://packagephobia.now.sh/badge?p=luckystarry-mysql)](https://packagephobia.now.sh/result?p=luckystarry-mysql)
-[![codebeat badge](https://codebeat.co/badges/3265bab9-f87a-4e77-8d2a-d4bf75b5592b)](https://codebeat.co/projects/github-com-luckystarry-luckystarry-mysql-master)
+[![codebeat badge](https://codebeat.co/badges/ea859567-0c30-4cc9-a491-7d758b2afd77)](https://codebeat.co/projects/github-com-luckystarry-luckystarry-mysql-master)
 [![Known Vulnerabilities](https://snyk.io/test/github/LuckyStarry/luckystarry-mysql/badge.svg?targetFile=package.json)](https://snyk.io/test/github/LuckyStarry/luckystarry-mysql?targetFile=package.json)
 [![License Status](https://img.shields.io/badge/License-MIT-brightgreen.svg)](https://raw.githubusercontent.com/LuckyStarry/luckystarry-mysql/master/LICENSE)
 
@@ -23,35 +23,7 @@ npm i -S luckystarry-mysql
 
 ```typescript
 // index.ts
-import ioc, { MySqlClient } from 'luckystarry-mysql'
-
-@Injectable()
-class Foo {}
-
-@Injectable()
-class Bar {
-  private _foo: Foo
-  public constructor(foo: Foo) {
-    this._foo = foo
-  }
-}
-
-ioc.AddTransient(Foo)
-ioc.AddTransient(Bar)
-
-let foo = ioc.GetService(Foo)
-let bar = ioc.GetService(Bar)
-```
-
-为了使用 _注解_ 的特性，请在项目运行目录添加 _tsconfig.json_
-
-```json
-{
-  "compilerOptions": {
-    "experimentalDecorators": true,
-    "emitDecoratorMetadata": true
-  }
-}
+import { MySqlClient } from 'luckystarry-mysql'
 ```
 
 ## LICENSE

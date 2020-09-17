@@ -4,15 +4,20 @@ import { MySqlException } from './mysql-exception'
 import adapter, { MySqlValueAdapter } from './mysql-value-adapter'
 export class MySqlClient {
   private pool: mysql.Pool
+  private config: PoolConfig | string
   private adapter: MySqlValueAdapter = adapter
-  public constructor(config: PoolConfig | string) {
-    if (!config) {
-      config = process.env.MYSQL_CONNECTION
+  public constructor(config?: PoolConfig | string) {
+    this.config = config || process.env.MYSQL_CONNECTION
+  }
+
+  public get Pool(): mysql.Pool {
+    if (!this.pool) {
+      if (!this.config) {
+        throw new Error('必须配置 MySQL 的连接字符串。')
+      }
+      this.pool = mysql.createPool(this.config)
     }
-    if (!config) {
-      throw new Error('必须配置 MySQL 的连接字符串。')
-    }
-    this.pool = mysql.createPool(config)
+    return this.Pool
   }
 
   public async transactAsync<T>(process: (connection: MySqlConnection) => Promise<T>): Promise<T> {
@@ -41,7 +46,7 @@ export class MySqlClient {
 
   public async executeAsync<T>(process: (connection: MySqlConnection) => Promise<T>): Promise<T> {
     return new Promise<T>((resolve, reject) => {
-      this.pool.getConnection(async (error, connection) => {
+      this.Pool.getConnection(async (error, connection) => {
         if (error) {
           reject(new MySqlException({ sql: '', process: 'executeAsync', inner: error }))
         } else {

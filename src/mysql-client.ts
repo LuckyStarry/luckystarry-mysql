@@ -17,7 +17,7 @@ export class MySqlClient {
       }
       this.pool = mysql.createPool(this.config)
     }
-    return this.Pool
+    return this.pool
   }
 
   public async transactAsync<T>(process: (connection: MySqlConnection) => Promise<T>): Promise<T> {

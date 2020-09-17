@@ -24,6 +24,7 @@
   "devDependencies": {
     "@types/chai": "^4.2.12",
     "@types/mocha": "^8.0.3",
+    "@types/mysql": "^2.15.15",
     "@types/node": "^14.10.2",
     "chai": "^4.2.0",
     "coveralls": "^3.1.0",

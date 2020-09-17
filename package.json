@@ -1,6 +1,6 @@
 {
   "name": "luckystarry-mysql",
-  "version": "1.0.0-3",
+  "version": "1.0.0-4",
   "description": "一个轻量易用的 MySQL 客户端。",
   "keywords": [
     "mysql"

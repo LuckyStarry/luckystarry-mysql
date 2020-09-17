@@ -1,8 +1,11 @@
 {
   "name": "luckystarry-mysql",
   "version": "1.0.0-0",
-  "description": "",
-  "main": "index.js",
+  "description": "一个轻量易用的 MySQL 客户端。",
+  "keywords": [
+    "mysql"
+  ],
+  "main": "dist/index.js",
   "scripts": {
     "prebuild": "del-cli dist -f",
     "build": "tsc",

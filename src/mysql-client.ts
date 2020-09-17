@@ -5,7 +5,7 @@ import adapter, { MySqlValueAdapter } from './mysql-value-adapter'
 export class MySqlClient {
   private pool: mysql.Pool
   private adapter: MySqlValueAdapter = adapter
-  public MySqlClient(config: PoolConfig | string) {
+  public constructor(config: PoolConfig | string) {
     if (!config) {
       config = process.env.MYSQL_CONNECTION
     }

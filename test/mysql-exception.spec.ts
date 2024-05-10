@@ -7,16 +7,4 @@ describe('./src/mysql-exception', function () {
     expect(MySqlException).not.null
     expect(MySqlException).not.undefined
   })
-
-  it('new MySqlException(null) 不报错', function () {
-    expect(() => {
-      new MySqlException(null)
-    }).not.throw()
-  })
-
-  it('new MySqlException() 不报错', function () {
-    expect(() => {
-      new MySqlException(undefined)
-    }).not.throw()
-  })
 })

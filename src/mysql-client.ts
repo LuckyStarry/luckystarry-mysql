@@ -3,11 +3,11 @@ import { MySqlConnection } from './mysql-connection'
 import { MySqlException } from './mysql-exception'
 import adapter, { MySqlValueAdapter } from './mysql-value-adapter'
 export class MySqlClient {
-  private pool: mysql.Pool
+  private pool!: mysql.Pool
   private config: PoolConfig | string
   private adapter: MySqlValueAdapter = adapter
   public constructor(config?: PoolConfig | string) {
-    this.config = config || process.env.MYSQL_CONNECTION
+    this.config = config || process.env.MYSQL_CONNECTION!
   }
 
   public get Pool(): mysql.Pool {
@@ -34,7 +34,7 @@ export class MySqlClient {
             if (error instanceof MySqlException) {
               reject(error)
             } else {
-              reject(new MySqlException({ sql: '', process: 'transactAsync', inner: error }))
+              reject(new MySqlException({ sql: '', process: 'transactAsync', inner: (error as Error) || undefined }))
             }
           }
         } else {
@@ -58,7 +58,7 @@ export class MySqlClient {
               if (e instanceof MySqlException) {
                 reject(e)
               } else {
-                reject(new MySqlException({ sql: '', process: 'executeAsync', inner: e }))
+                reject(new MySqlException({ sql: '', process: 'executeAsync', inner: (e as Error) || undefined }))
               }
             } finally {
               connection.release()
@@ -76,7 +76,7 @@ export class MySqlClient {
       try {
         let { results } = await connection.queryAsync(sql, parameters)
         if (results && results.length) {
-          let list = []
+          let list: T[] = []
           for (let item of results) {
             for (let column in item) {
               if (column) {
@@ -87,9 +87,9 @@ export class MySqlClient {
           }
           return list
         }
-        return null
+        return []
       } catch (error) {
-        throw new MySqlException({ sql, parameters, process: 'allAsync', inner: error })
+        throw new MySqlException({ sql, parameters, process: 'allAsync', inner: (error as Error) || undefined })
       }
     })
   }
@@ -100,7 +100,7 @@ export class MySqlClient {
         let { results } = await connection.queryAsync(sql, parameters)
         if (results && results.length === 2) {
           let count = results[0][0]['__COUNT']
-          let list = []
+          let list: T[] = []
           for (let item of results[1]) {
             for (let column in item) {
               if (column) {
@@ -111,9 +111,9 @@ export class MySqlClient {
           }
           return { list, count }
         }
-        return null
+        return { list: [], count: 0 }
       } catch (error) {
-        throw new MySqlException({ sql, parameters, process: 'queryAsync', inner: error })
+        throw new MySqlException({ sql, parameters, process: 'queryAsync', inner: (error as Error) || undefined })
       }
     })
   }
@@ -134,12 +134,12 @@ export class MySqlClient {
         if (error instanceof MySqlException) {
           throw error
         }
-        throw new MySqlException({ sql, process: 'getCountAsync', parameters, inner: error })
+        throw new MySqlException({ sql, process: 'getCountAsync', parameters, inner: (error as Error) || undefined })
       }
     })
   }
 
-  public async queryFirstAsync<T>(sql: string, parameters?: any[]): Promise<T> {
+  public async queryFirstAsync<T>(sql: string, parameters?: any[]): Promise<T | undefined> {
     let results = await this.allAsync<T>(sql, parameters)
     if (results && results.length) {
       return results.shift()
@@ -148,7 +148,7 @@ export class MySqlClient {
     }
   }
 
-  public async queryFirstOrDefaultAsync<T>(sql: string, parameters?: any[], defaultValue?: T): Promise<T> {
+  public async queryFirstOrDefaultAsync<T>(sql: string, parameters?: any[], defaultValue?: T): Promise<T | undefined> {
     let results = await this.allAsync<T>(sql, parameters)
     if (results && results.length) {
       return results.shift()

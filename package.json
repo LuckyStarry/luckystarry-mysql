@@ -25,11 +25,11 @@
   },
   "homepage": "https://github.com/LuckyStarry/luckystarry-mysql#readme",
   "devDependencies": {
-    "@types/chai": "^4.2.12",
+    "@types/chai": "4.3.14",
     "@types/mocha": "^10.0.6",
     "@types/mysql": "^2.15.15",
     "@types/node": "^20.12.11",
-    "chai": "^5.1.1",
+    "chai": "^4.4.1",
     "coveralls": "^3.1.0",
     "cross-env": "^7.0.2",
     "del-cli": "^5.1.0",
@@ -42,5 +42,19 @@
   },
   "dependencies": {
     "mysql": "^2.18.1"
+  },
+  "nyc": {
+    "extension": [
+      ".ts"
+    ],
+    "reporter": [
+      "lcov",
+      "text",
+      "text-summary"
+    ],
+    "include": [
+      "src"
+    ],
+    "all": true
   }
 }

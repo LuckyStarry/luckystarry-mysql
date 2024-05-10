@@ -2,7 +2,7 @@ export class MySqlException extends Error {
   private process: string
   private sql: string
   private parameters: any
-  private inner: Error
+  private inner: Error | null
   public constructor(payload: { message?: string; sql: string; parameters?: any; process: string; inner?: Error }) {
     payload = Object.assign({}, payload, { message: 'SQL执行出现异常' })
     super(payload.message || `SQL执行出现异常。SQL: ${payload.sql || ''}`)
@@ -24,7 +24,7 @@ export class MySqlException extends Error {
     return this.parameters
   }
 
-  public get InnerException(): Error {
+  public get InnerException(): Error | null {
     return this.inner
   }
 }

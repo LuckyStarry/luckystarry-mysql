@@ -46,7 +46,8 @@ export class MySqlClient {
 
   public async executeAsync<T>(process: (connection: MySqlConnection) => Promise<T>): Promise<T> {
     return new Promise<T>((resolve, reject) => {
-      this.Pool.getConnection(async (error, connection) => {
+      const pool = this.Pool
+      pool.getConnection(async (error, connection) => {
         if (error) {
           reject(new MySqlException({ sql: '', process: 'executeAsync', inner: error }))
         } else {
@@ -60,7 +61,7 @@ export class MySqlClient {
                 reject(new MySqlException({ sql: '', process: 'executeAsync', inner: e }))
               }
             } finally {
-              connection.release()
+              pool.releaseConnection(connection)
             }
           } else {
             reject(new MySqlException({ sql: '', process: 'getConnection' }))
@@ -128,7 +129,7 @@ export class MySqlClient {
             return row[name]
           }
         }
-        throw new MySqlException({ message: '获取 Count 失败, 检索结果的字段及行数不正确。', sql, parameters, process: 'getCountAsync' })
+        throw new MySqlException({ message: `获取 Count 失败, 检索结果的字段及行数不正确。SQL: ${sql}`, sql, parameters, process: 'getCountAsync' })
       } catch (error) {
         if (error instanceof MySqlException) {
           throw error
@@ -143,7 +144,7 @@ export class MySqlClient {
     if (results && results.length) {
       return results.shift()
     } else {
-      throw new MySqlException({ message: '获取首行数据失败, 检索结果为空。', sql, parameters, process: 'queryFirstAsync' })
+      throw new MySqlException({ message: `获取首行数据失败, 检索结果为空。SQL: ${sql}`, sql, parameters, process: 'queryFirstAsync' })
     }
   }
 
@@ -162,7 +163,7 @@ export class MySqlClient {
         let { results } = await connection.queryAsync(sql, parameters)
         return results.insertId
       } catch (error) {
-        throw new MySqlException({ message: '插入数据失败。', sql, parameters, process: 'insertAsync' })
+        throw new MySqlException({ message: `插入数据失败。SQL: ${sql}`, sql, parameters, process: 'insertAsync' })
       }
     })
   }
@@ -173,7 +174,7 @@ export class MySqlClient {
         let { results } = await connection.queryAsync(sql, parameters)
         return results.affectedRows
       } catch (error) {
-        throw new MySqlException({ message: '执行SQL失败。', sql, parameters, process: 'executeNonQueryAsync' })
+        throw new MySqlException({ message: `执行SQL失败。SQL: ${sql}`, sql, parameters, process: 'executeNonQueryAsync' })
       }
     })
   }

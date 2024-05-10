@@ -61,7 +61,7 @@ export class MySqlClient {
                 reject(new MySqlException({ sql: '', process: 'executeAsync', inner: e }))
               }
             } finally {
-              pool.releaseConnection(connection)
+              connection.release()
             }
           } else {
             reject(new MySqlException({ sql: '', process: 'getConnection' }))
